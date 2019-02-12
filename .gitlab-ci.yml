@@ -1,0 +1,30 @@
+stages:
+  - lint
+  - test
+
+before_script:
+  - mkdir -p /go/src/gitlab.nsd.no/nsd-utvikling /go/src/_/builds
+  - cp -r $CI_PROJECT_DIR /go/src/gitlab.nsd.no/nsd-utvikling/carsten-coffee-api
+  - ln -s /go/src/gitlab.nsd.no/nsd-utvikling /go/src/_/builds/nsd-utvikling
+
+golang linting:
+  stage: lint
+  image: golang:latest
+  script:
+    - go get -u golang.org/x/lint/golint
+    - golint -set_exit_status $(go list ./... | grep -v /vendor/)
+
+running the test suite:
+  stage: test
+  image: golang:latest
+  script:
+    - cd /go/src/gitlab.nsd.no/nsd-utvikling/carsten-coffee-api
+    - go get -u github.com/jstemmer/go-junit-report
+    - go get -u github.com/kardianos/govendor
+    - govendor sync
+    - go test -v 2>&1 | tee go-junit-report > report.xml
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
+
