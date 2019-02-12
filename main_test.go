@@ -23,7 +23,7 @@ func TestRootRoute(t *testing.T) {
 }
 
 func TestHealthcheck(t *testing.T) {
-  var requestUuid string
+  var requestUUID string
   requestUuid = "11122333-aaaa-bbbb-cccc-444555666777"
 
   responsejson := gin.H{
@@ -34,7 +34,7 @@ func TestHealthcheck(t *testing.T) {
 
   w := httptest.NewRecorder()
   req, _ := http.NewRequest("GET", "/healthcheck", nil)
-  req.Header.Add("X-Request-Id", requestUuid)
+  req.Header.Add("X-Request-Id", requestUUID)
   router.ServeHTTP(w, req)
 
   assert.Equal(t, 200, w.Code)
@@ -52,7 +52,7 @@ func TestHealthcheck(t *testing.T) {
   assert.Equal(t, responsejson["message"], value)
 
   // check request header
-  assert.Contains(t, req.Header["X-Request-Id"], requestUuid)
+  assert.Contains(t, req.Header["X-Request-Id"], requestUUID)
 
 }
 
