@@ -24,7 +24,7 @@ func TestRootRoute(t *testing.T) {
 
 func TestHealthcheck(t *testing.T) {
   var requestUUID string
-  requestUuid = "11122333-aaaa-bbbb-cccc-444555666777"
+  requestUUID = "11122333-aaaa-bbbb-cccc-444555666777"
 
   responsejson := gin.H{
     "message": "Ok",
