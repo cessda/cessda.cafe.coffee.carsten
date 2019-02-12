@@ -12,4 +12,13 @@ Then install dependencies with [Govendor](https://github.com/kardianos/govendor)
 
   govendor sync
 
+## Execution
+
+Simply run
+
+  go run .
+
+and access
+
+  http://localhost:1337
 
