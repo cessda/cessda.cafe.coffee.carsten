@@ -1,6 +1,6 @@
 # carsten-coffee-api
 
-Golang implementation of COFFEE API.
+Golang implementation of COFFEE API using [Gin Gonic](https://gin-gonic.github.io/gin/).
 
 ## Installation
 
