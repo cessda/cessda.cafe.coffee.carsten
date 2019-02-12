@@ -24,8 +24,5 @@ Simply run
 go run .
 ```
 
-and access
-```
-http://localhost:1337
-```
+and access http://localhost:1337.
 
