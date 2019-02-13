@@ -8,7 +8,7 @@ import (
   "github.com/atarantini/ginrequestid"
 )
 
-func MyRequestLogger(log *logrus.Logger) gin.HandlerFunc {
+func myRequestLogger(log *logrus.Logger) gin.HandlerFunc {
   return func(c *gin.Context) {
 
     path := c.Request.URL.Path
@@ -45,7 +45,7 @@ func setupRouter() *gin.Engine {
   log := logrus.New()
   log.SetLevel(logrus.DebugLevel)
 
-  r.Use(MyRequestLogger(log), gin.Recovery())
+  r.Use(myRequestLogger(log), gin.Recovery())
 
   r.GET("/", func(c *gin.Context) {
     c.String(http.StatusOK, "Hello World!")
