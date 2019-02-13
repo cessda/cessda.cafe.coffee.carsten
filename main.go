@@ -4,36 +4,25 @@ import (
   "time"
   "net/http"
   "github.com/sirupsen/logrus"
-  "github.com/toorop/gin-logrus"
   "github.com/gin-gonic/gin"
   "github.com/atarantini/ginrequestid"
 )
 
-func setupRouter() *gin.Engine {
-  r := gin.New()
+func MyRequestLogger(log *logrus.Logger) gin.HandlerFunc {
+  return func(c *gin.Context) {
 
-  r.Use(ginrequestid.RequestId())
-
-  log := logrus.New()
-  log.SetLevel(logrus.DebugLevel)
-  //log.SetFormatter(&log.JSONFormatter{})
-  r.Use(ginlogrus.Logger(log), gin.Recovery())
-
-  r.GET("/", func(c *gin.Context) {
-    c.String(http.StatusOK, "Hello World!")
-  })
-
-  r.GET("/healthcheck", func(c *gin.Context) {
+    path := c.Request.URL.Path
 
     start := time.Now()
 
     log.WithFields(logrus.Fields{
       "method": "GET",
       "requestId": c.MustGet("RequestId"),
-      "endpoint": "healthcheck",
+      "endpoint": path,
     }).Debug("request received")
 
-    c.JSON(http.StatusOK, gin.H{"message": "Ok"})
+
+    c.Next()
 
     elapsed := time.Since(start)
 
@@ -42,8 +31,29 @@ func setupRouter() *gin.Engine {
       "requestId": c.MustGet("RequestId"),
       "status": http.StatusOK,
       "responsetime": elapsed,
-      "endpoint": "healthcheck",
+      "endpoint": path,
     }).Debug("request answered")
+
+  }
+}
+
+func setupRouter() *gin.Engine {
+  r := gin.New()
+
+  r.Use(ginrequestid.RequestId())
+
+  log := logrus.New()
+  log.SetLevel(logrus.DebugLevel)
+
+  r.Use(MyRequestLogger(log), gin.Recovery())
+
+  r.GET("/", func(c *gin.Context) {
+    c.String(http.StatusOK, "Hello World!")
+  })
+
+  r.GET("/healthcheck", func(c *gin.Context) {
+
+    c.JSON(http.StatusOK, gin.H{"message": "Ok"})
 
   })
 
