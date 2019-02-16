@@ -62,6 +62,17 @@ func setupRouter() *gin.Engine {
 
   })
 
+  r.GET("/status", func(c *gin.Context) {
+
+    if systemBrewing() {
+      c.JSON(http.StatusConflict, gin.H{"message": "System Brewing -- Please wait!"})
+    } else if orderWaiting() {
+      c.JSON(http.StatusUnauthorized, gin.H{"message": "Coffee Waiting -- Come and get it!"})
+    } else {
+      c.JSON(http.StatusOK, gin.H{"message": "System Ready"})
+    }
+  })
+
   r.GET("/order-history", func(c *gin.Context) {
 
     c.JSON(http.StatusOK, getAllOrders())
@@ -70,10 +81,10 @@ func setupRouter() *gin.Engine {
 
   r.GET("/order-history/:ID", func(c *gin.Context) {
     ID := c.Param("ID")
-    order, err := getOrderbyID(ID)
+    order, success := getOrderbyID(ID)
 
-    if err != nil {
-      c.JSON(http.StatusNotFound, err)
+    if ! success {
+      c.JSON(http.StatusNotFound, gin.H{"message": "Order not found!"})
     } else {
       c.JSON(http.StatusOK, order)
     }
@@ -83,14 +94,13 @@ func setupRouter() *gin.Engine {
     var incomingOrder coffeeOrder
     c.BindJSON(&incomingOrder)
 
-    result,err := newOrder(incomingOrder.Type)
+    result, success := newOrder(incomingOrder.Type)
 
-    if err != nil {
+    if !success {
       log.WithFields(logrus.Fields{
         "requestId": c.MustGet("RequestId"),
-        "error": err,
-      }).Debug("Error")
-      c.JSON(http.StatusNotFound, err)
+      }).Debug("Error placing order")
+      c.JSON(http.StatusBadRequest, gin.H{"message": "Error!"})
     } else {
       log.WithFields(logrus.Fields{
         "requestId": c.MustGet("RequestId"),
@@ -102,6 +112,24 @@ func setupRouter() *gin.Engine {
 
   })
 
+  r.GET("/retrieve-coffee/:ID", func(c *gin.Context) {
+    ID := c.Param("ID")
+    order, success := retrieveOrder(ID)
+      log.WithFields(logrus.Fields{
+        "requestId": c.MustGet("RequestId"),
+        "success": success,
+      }).Debug("Request to retrieve Coffee")
+    if ! success {
+      log.WithFields(logrus.Fields{
+        "requestId": c.MustGet("RequestId"),
+        "success": success,
+        "order-id": ID,
+      }).Debug("Failed to retrieve Coffee")
+      c.JSON(http.StatusBadRequest, gin.H{"message": "Nope!"})
+    } else {
+      c.JSON(http.StatusOK, order)
+    }
+  })
 
 
   return r
