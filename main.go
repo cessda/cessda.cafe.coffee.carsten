@@ -57,6 +57,23 @@ func setupRouter() *gin.Engine {
 
   })
 
+  r.GET("/order-history", func(c *gin.Context) {
+
+    c.JSON(http.StatusOK, getAllOrders())
+
+  })
+
+  r.GET("/order-history/:ID", func(c *gin.Context) {
+    ID := c.Param("ID")
+    order, err := getOrderbyID(ID)
+
+    if err != nil {
+      c.JSON(http.StatusNotFound, err)
+    } else {
+      c.JSON(http.StatusOK, order)
+    }
+  })
+
   return r
 }
 
