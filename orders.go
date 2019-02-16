@@ -3,7 +3,9 @@
 package main
 
 import (
+  "time"
 	"errors"
+  "github.com/satori/go.uuid"
 )
 
 type order struct {
@@ -32,5 +34,21 @@ func getOrderbyID(id string) (*order, error) {
   return nil, errors.New("Order not found")
 }
 
+func newOrder(Type string) (*order, error) {
+
+  myorderid, _ := uuid.NewV4()
+
+  var newOrder order
+  newOrder.ID = myorderid.String()
+  newOrder.Type = Type
+  newOrder.OrderedAt = time.Now().Format(time.RFC3339)
+  newOrder.ReadyAt = time.Now().Add(time.Minute*1).Format(time.RFC3339)
+
+  orderList = append(orderList, newOrder)
+
+  theNewOrder , err := getOrderbyID(newOrder.ID)
+  return theNewOrder, err
+
+}
 
 

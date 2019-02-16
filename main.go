@@ -8,6 +8,11 @@ import (
   "github.com/atarantini/ginrequestid"
 )
 
+type coffeeOrder struct {
+  Type      string `json:"type"`
+}
+
+
 func myRequestLogger(log *logrus.Logger) gin.HandlerFunc {
   return func(c *gin.Context) {
 
@@ -73,6 +78,31 @@ func setupRouter() *gin.Engine {
       c.JSON(http.StatusOK, order)
     }
   })
+
+  r.POST("/order-coffee", func(c *gin.Context) {
+    var incomingOrder coffeeOrder
+    c.BindJSON(&incomingOrder)
+
+    result,err := newOrder(incomingOrder.Type)
+
+    if err != nil {
+      log.WithFields(logrus.Fields{
+        "requestId": c.MustGet("RequestId"),
+        "error": err,
+      }).Debug("Error")
+      c.JSON(http.StatusNotFound, err)
+    } else {
+      log.WithFields(logrus.Fields{
+        "requestId": c.MustGet("RequestId"),
+        "type": result.Type,
+        "readyAt": result.ReadyAt,
+      }).Debug("Order placed")
+      c.JSON(http.StatusOK, result)
+    }
+
+  })
+
+
 
   return r
 }
