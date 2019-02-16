@@ -64,13 +64,10 @@ func setupRouter() *gin.Engine {
 
   r.GET("/status", func(c *gin.Context) {
 
-    if systemBrewing() {
-      c.JSON(http.StatusConflict, gin.H{"message": "System Brewing -- Please wait!"})
-    } else if orderWaiting() {
-      c.JSON(http.StatusUnauthorized, gin.H{"message": "Coffee Waiting -- Come and get it!"})
-    } else {
-      c.JSON(http.StatusOK, gin.H{"message": "System Ready"})
-    }
+    systemStatusCode, systemStatusMessage := systemStatus()
+
+    c.JSON(systemStatusCode, gin.H{"message": systemStatusMessage})
+
   })
 
   r.GET("/order-history", func(c *gin.Context) {
@@ -94,13 +91,13 @@ func setupRouter() *gin.Engine {
     var incomingOrder coffeeOrder
     c.BindJSON(&incomingOrder)
 
-    result, success := newOrder(incomingOrder.Type)
+    result, success, systemStatus := newOrder(incomingOrder.Type)
 
     if !success {
       log.WithFields(logrus.Fields{
         "requestId": c.MustGet("RequestId"),
       }).Debug("Error placing order")
-      c.JSON(http.StatusBadRequest, gin.H{"message": "Error!"})
+      c.JSON(http.StatusBadRequest, gin.H{"message": systemStatus})
     } else {
       log.WithFields(logrus.Fields{
         "requestId": c.MustGet("RequestId"),

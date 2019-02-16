@@ -4,6 +4,7 @@ package main
 
 import (
   "time"
+  "net/http"
   "github.com/satori/go.uuid"
 )
 
@@ -28,6 +29,12 @@ func getAllOrders() []order {
 
 // check whether a coffee is still brewing
 func systemBrewing() bool {
+  for _, o := range orderList {
+    readytime, _ := time.Parse(time.RFC3339, o.ReadyAt)
+    if time.Now().Before(readytime) {
+      return true
+    }
+  }
   return false
 }
 
@@ -41,10 +48,33 @@ func orderWaiting() bool {
   return false
 }
 
+// check overall system status
+func systemStatus() (int, string) {
+  var systemStatusCode int
+  var systemStatusMessage string
+
+  if systemBrewing() {
+    systemStatusCode = http.StatusConflict
+    systemStatusMessage = "System Brewing -- Please wait!"
+  } else if orderWaiting() {
+    systemStatusCode = http.StatusUnauthorized
+    systemStatusMessage = "Coffee Waiting -- Come and get it!"
+  } else {
+    systemStatusCode = http.StatusOK
+    systemStatusMessage = "System Ready!"
+  }
+
+  return systemStatusCode, systemStatusMessage
+
+}
+
+// set a sepcific order to retrieved if it`s done but still waiting
 func retrieveOrder(id string) (*order, bool) {
   for index, o := range orderList {
     if o.ID == id {
-      if ! o.Retrieved {
+      // only retrieve when done and only once
+      readytime, _ := time.Parse(time.RFC3339, o.ReadyAt)
+      if time.Now().After(readytime) && !o.Retrieved {
         orderList[index].Retrieved = true
         o.Retrieved = true
         return &o, true
@@ -56,6 +86,7 @@ func retrieveOrder(id string) (*order, bool) {
   return nil, false
 }
 
+// return an order
 func getOrderbyID(id string) (*order, bool) {
   for _, o := range orderList {
     if o.ID == id {
@@ -65,20 +96,29 @@ func getOrderbyID(id string) (*order, bool) {
   return nil, false
 }
 
-func newOrder(Type string) (*order, bool) {
+// create a new coffee order
+func newOrder(Type string) (*order, bool, string) {
 
-  myorderid, _ := uuid.NewV4()
+  systemStatusCode, systemStatusMessage := systemStatus()
 
-  var newOrder order
-  newOrder.ID = myorderid.String()
-  newOrder.Type = Type
-  newOrder.OrderedAt = time.Now().Format(time.RFC3339)
-  newOrder.ReadyAt = time.Now().Add(time.Minute*1).Format(time.RFC3339)
+  if ! (systemStatusCode == http.StatusOK) {
+    return nil, false, systemStatusMessage
+  } else {
 
-  orderList = append(orderList, newOrder)
+    myorderid, _ := uuid.NewV4()
 
-  theNewOrder, success := getOrderbyID(newOrder.ID)
-  return theNewOrder, success
+    var newOrder order
+    newOrder.ID = myorderid.String()
+    newOrder.Type = Type
+    newOrder.OrderedAt = time.Now().Format(time.RFC3339)
+    newOrder.ReadyAt = time.Now().Add(time.Minute*1).Format(time.RFC3339)
+
+    orderList = append(orderList, newOrder)
+
+    theNewOrder, success := getOrderbyID(newOrder.ID)
+    return theNewOrder, success, systemStatusMessage
+
+  }
 
 }
 
