@@ -4,13 +4,8 @@ Golang implementation of COFFEE API using [Gin Gonic](https://gin-gonic.github.i
 
 ## Installation
 
-Assuming you have go, do
-
-```
-go get -u gitlab.nsd.no/nsd-utvikling/carsten-coffee-api
-```
-
-Then install dependencies with [Govendor](https://github.com/kardianos/govendor).
+Assuming you have go, and the code in you go path,
+install the dependencies with [Govendor](https://github.com/kardianos/govendor).
 
 ```
 govendor sync
