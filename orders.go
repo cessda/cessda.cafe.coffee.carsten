@@ -78,9 +78,8 @@ func retrieveOrder(id string) (*order, bool) {
         orderList[index].Retrieved = true
         o.Retrieved = true
         return &o, true
-      } else {
-        return &o, false
       }
+      return &o, false
     }
   }
   return nil, false
@@ -103,22 +102,20 @@ func newOrder(Type string) (*order, bool, string) {
 
   if ! (systemStatusCode == http.StatusOK) {
     return nil, false, systemStatusMessage
-  } else {
-
-    myorderid, _ := uuid.NewV4()
-
-    var newOrder order
-    newOrder.ID = myorderid.String()
-    newOrder.Type = Type
-    newOrder.OrderedAt = time.Now().Format(time.RFC3339)
-    newOrder.ReadyAt = time.Now().Add(time.Minute*1).Format(time.RFC3339)
-
-    orderList = append(orderList, newOrder)
-
-    theNewOrder, success := getOrderbyID(newOrder.ID)
-    return theNewOrder, success, systemStatusMessage
-
   }
+
+  myorderid, _ := uuid.NewV4()
+
+  var newOrder order
+  newOrder.ID = myorderid.String()
+  newOrder.Type = Type
+  newOrder.OrderedAt = time.Now().Format(time.RFC3339)
+  newOrder.ReadyAt = time.Now().Add(time.Minute*1).Format(time.RFC3339)
+
+  orderList = append(orderList, newOrder)
+
+  theNewOrder, success := getOrderbyID(newOrder.ID)
+  return theNewOrder, success, systemStatusMessage
 
 }
 
