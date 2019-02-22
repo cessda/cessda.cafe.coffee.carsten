@@ -1,11 +1,12 @@
 stages:
   - lint
   - test
+  - containerize
 
 before_script:
-  - mkdir -p /go/src/gitlab.nsd.no/nsd-utvikling /go/src/_/builds
-  - cp -r $CI_PROJECT_DIR /go/src/gitlab.nsd.no/nsd-utvikling/carsten-coffee-api
-  - ln -s /go/src/gitlab.nsd.no/nsd-utvikling /go/src/_/builds/nsd-utvikling
+  - mkdir -p /go/src/nsd-utvikling /go/src/_/builds
+  - cp -r $CI_PROJECT_DIR /go/src/nsd-utvikling/carsten-coffee-api
+  - ln -s /go/src/nsd-utvikling /go/src/_/builds/nsd-utvikling
 
 golang linting:
   stage: lint
@@ -18,7 +19,7 @@ running the test suite:
   stage: test
   image: golang:latest
   script:
-    - cd /go/src/gitlab.nsd.no/nsd-utvikling/carsten-coffee-api
+    - cd /go/src/nsd-utvikling/carsten-coffee-api
     - go get -u github.com/jstemmer/go-junit-report
     - go get -u github.com/kardianos/govendor
     - govendor sync
@@ -27,4 +28,16 @@ running the test suite:
     when: always
     reports:
       junit: report.xml
+
+containerizing:
+  stage: containerize
+  image: docker:18
+  script:
+    - echo "$DOCKER_BUILDER_CERT_PEM" > /root/cert.pem
+    - echo "$DOCKER_BUILDER_KEY_PEM" > /root/key.pem
+    - echo "$DOCKER_BUILDER_CA_PEM" > /root/ca.pem
+    - export DOCKER_TLS_VERIFY="1"
+    - export DOCKER_HOST="$DOCKER_BUILDER_HOST"
+    - export DOCKER_CERT_PATH="/root"
+    - docker build -t carsten-coffee-api:latest .
 
