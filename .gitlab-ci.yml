@@ -1,5 +1,5 @@
 stages:
-  - lint
+  - lintnvet
   - test
   - containerize
 
@@ -8,12 +8,13 @@ before_script:
   - cp -r $CI_PROJECT_DIR /go/src/nsd-utvikling/carsten-coffee-api
   - ln -s /go/src/nsd-utvikling /go/src/_/builds/nsd-utvikling
 
-golang linting:
-  stage: lint
+golang linting and vetting:
+  stage: lintnvet
   image: golang:latest
   script:
     - go get -u golang.org/x/lint/golint
     - golint -set_exit_status $(go list ./... | grep -v /vendor/)
+    - go vet $(go list ./... | grep -v /vendor/)
 
 running the test suite:
   stage: test
