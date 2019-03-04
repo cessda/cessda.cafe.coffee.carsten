@@ -11,7 +11,6 @@ pipeline{
     stages{
         stage("Build Docker Image"){
             steps{
-                dir('./')
                 echo "Building Docker image using Dockerfile with tag"
                 sh("docker build -t ${image_tag} .")
             }
