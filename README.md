@@ -7,7 +7,7 @@ Golang implementation of COFFEE API using [Gin Gonic](https://gin-gonic.github.i
 Assuming you have go, and the code in you go path,
 install the dependencies with [Govendor](https://github.com/kardianos/govendor).
 
-```
+```bash
 govendor sync
 ```
 
@@ -15,9 +15,8 @@ govendor sync
 
 Simply run
 
-```
+```bash
 go run .
 ```
 
-and access http://localhost:1337.
-
+and access <http://localhost:1337.>

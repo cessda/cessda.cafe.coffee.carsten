@@ -12,4 +12,3 @@ FROM scratch
 COPY --from=builder /go/src/carsten-coffee-api/carsten-coffee-api /carsten-coffee-api
 CMD ["/carsten-coffee-api"]
 
-
