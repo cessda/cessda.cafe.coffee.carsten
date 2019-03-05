@@ -12,7 +12,7 @@ pipeline{
         stage("Build Docker Image"){
             steps{
                 echo "Building Docker image using Dockerfile with tag"
-                sh("docker build -t ${image_tag} .")
+                sh("gcloud builds submit --tag ${image_tag} .")
             }
         }
         stage('Push Docker image'){
