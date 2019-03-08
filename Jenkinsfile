@@ -3,7 +3,7 @@ pipeline{
 	{
 		project_name = "cessda-dev"
 		module_name = "mgmt-coffeepot"
-		image_tag = "eu.gcr.io/${project_name}/${module_name}:${env.BRANCH_NAME}-v${env.BUILD_NUMBER}"
+		image_tag = "eu.gcr.io/${project_name}/${module_name}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
 	}
 
     agent any
@@ -19,6 +19,11 @@ pipeline{
             steps{
                 echo 'Tag and push Docker image'
 				sh("gcloud container images add-tag ${image_tag} eu.gcr.io/${project_name}/${module_name}:${env.BRANCH_NAME}-latest")
+            }
+        }
+        stage('Deploy Docker image'){
+            steps{
+                build '../cessda.coffeeapi.deployment/master', parameters: [[$class: 'StringParameterValue', name: 'DEPLOYMENT_VERSION', value: "${env.BUILD_NUMBER}"]], wait: false
             }
         }
     }
