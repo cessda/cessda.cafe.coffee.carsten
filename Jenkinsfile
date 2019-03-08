@@ -23,7 +23,7 @@ pipeline{
         }
         stage('Deploy Docker image'){
             steps{
-                build '../cessda.coffeeapi.deployment/master', parameters: [[$class: 'StringParameterValue', name: DEPLOYMENT_VERSION, value: "${env.BUILD_NUMBER}"]], wait: false
+                build '../cessda.coffeeapi.deployment/master', parameters: [[$class: 'StringParameterValue', name: 'DEPLOYMENT_VERSION', value: String.valueOf(BUILD_NUMBER)]], wait: false
             }
         }
     }
