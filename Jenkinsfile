@@ -23,7 +23,7 @@ pipeline{
         }
         stage('Deploy Docker image'){
             steps{
-                build job: '../cessda.coffeeapi.deployment/master', parameters: [string(name: 'DEPLOYMENT_VERSION', value: "{env.BUILD_NUMBER}")], wait: false
+                build job: '../cessda.coffeeapi.deployment/master', parameters: [string(name: 'DEPLOYMENT_VERSION', value: BUILD_NUMBER)], wait: false
             }
         }
     }
