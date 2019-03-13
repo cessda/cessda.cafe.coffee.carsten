@@ -9,6 +9,20 @@ pipeline{
     agent any
 
     stages{
+        stage('Start Sonar scan') {
+		    steps {
+                withSonarQubeEnv('cessda-sonar') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
+        stage("Get Sonar Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
         stage("Build Docker Image"){
             steps{
                 echo "Building Docker image using Dockerfile with tag"
