@@ -4,6 +4,7 @@ pipeline{
 		project_name = "cessda-dev"
 		module_name = "mgmt-coffeepot"
 		image_tag = "eu.gcr.io/${project_name}/${module_name}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+        scannerHome = tool 'sonar-scanner'
 	}
 
     agent any
@@ -11,7 +12,6 @@ pipeline{
     stages{
         stage('Start Sonar scan') {
 		    steps {
-                def scannerHome = tool 'sonar-scanner';
                 withSonarQubeEnv('cessda-sonar') {
                     sh "${scannerHome}/bin/sonar-scanner"
                 }
