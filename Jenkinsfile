@@ -11,6 +11,7 @@ pipeline{
     stages{
         stage('Start Sonar scan') {
 		    steps {
+                def scannerHome = tool 'sonar-scanner';
                 withSonarQubeEnv('cessda-sonar') {
                     sh "${scannerHome}/bin/sonar-scanner"
                 }
