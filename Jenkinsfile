@@ -10,16 +10,12 @@ pipeline{
 
     stages{
         stage('Run Test Suite'){
+            agent{
+                docker { image 'golang:latest' }
+            }
             steps{
                 echo "Running test suite"
-                sh("mkdir -p /go/src/nsd-utvikling /go/src/_/builds")
-                sh("cp -r . /go/src/nsd-utvikling/carsten-coffee-api")
-                dir('/go/src/nsd-utvikling/carsten-coffee-api')
-                sh("go get -u github.com/jstemmer/go-junit-report")
-                sh("go get -u github.com/kardianos/govendor")
-                sh("govendor sync")
-                sh("go vet $(go list ./... | grep -v /vendor/)")
-                sh("go test -v 2>&1 | go-junit-report > report.xml")
+                sh("run-tests.sh")
             }
         }
         stage("Build Docker Image"){
@@ -34,6 +30,11 @@ pipeline{
 				sh("gcloud container images add-tag ${image_tag} eu.gcr.io/${project_name}/${module_name}:${env.BRANCH_NAME}-latest")
                 sh("gcloud container images add-tag ${image_tag} eu.gcr.io/${project_name}/${module_name}:latest")
             }
+        }
+    }
+    post {
+        always {
+            junit 'report.xml'
         }
     }
 }
