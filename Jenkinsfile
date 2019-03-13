@@ -16,7 +16,7 @@ pipeline{
             }
             steps{
                 echo "Running test suite"
-                sh("run-tests.sh")
+                sh("bash run-tests.sh")
             }
         }
         stage('Start Sonar scan') {
