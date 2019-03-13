@@ -10,6 +10,7 @@ pipeline{
     agent any
 
     stages{
+<<<<<<< HEAD
         stage('Start Sonar scan') {
 		    steps {
                 withSonarQubeEnv('cessda-sonar') {
@@ -22,6 +23,15 @@ pipeline{
                 timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: true
                 }
+=======
+        stage('Run Test Suite'){
+            agent{
+                docker { image 'golang:latest' }
+            }
+            steps{
+                echo "Running test suite"
+                sh("run-tests.sh")
+>>>>>>> test-suite
             }
         }
         stage("Build Docker Image"){
@@ -40,6 +50,11 @@ pipeline{
             steps{
                 build job: '../cessda.coffeeapi.deployment/master', parameters: [string(name: 'DEPLOYMENT_VERSION', value: BUILD_NUMBER)], wait: false
             }
+        }
+    }
+    post {
+        always {
+            junit 'report.xml'
         }
     }
 }
