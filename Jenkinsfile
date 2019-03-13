@@ -10,7 +10,15 @@ pipeline{
     agent any
 
     stages{
-<<<<<<< HEAD
+        stage('Run Test Suite'){
+            agent{
+                docker { image 'golang:latest' }
+            }
+            steps{
+                echo "Running test suite"
+                sh("run-tests.sh")
+            }
+        }
         stage('Start Sonar scan') {
 		    steps {
                 withSonarQubeEnv('cessda-sonar') {
@@ -23,15 +31,6 @@ pipeline{
                 timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: true
                 }
-=======
-        stage('Run Test Suite'){
-            agent{
-                docker { image 'golang:latest' }
-            }
-            steps{
-                echo "Running test suite"
-                sh("run-tests.sh")
->>>>>>> test-suite
             }
         }
         stage("Build Docker Image"){
