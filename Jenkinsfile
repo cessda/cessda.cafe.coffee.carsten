@@ -12,7 +12,10 @@ pipeline{
     stages{
         stage('Run Test Suite'){
             agent{
-                docker { image 'golang:latest' }
+                docker {
+                    image 'golang:latest'
+                    reuseNode true
+                }
             }
             steps{
                 echo "Running test suite"
