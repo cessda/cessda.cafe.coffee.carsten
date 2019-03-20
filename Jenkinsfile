@@ -10,6 +10,15 @@ pipeline{
     agent any
 
     stages{
+        stage('Run Test Suite'){
+            agent{
+                docker { image 'golang:latest' }
+            }
+            steps{
+                echo "Running test suite"
+                sh("bash run-tests.sh")
+            }
+        }
         stage('Start Sonar scan') {
 		    steps {
                 withSonarQubeEnv('cessda-sonar') {
