@@ -1,11 +1,11 @@
 pipeline{
     environment
-	{
-		project_name = "cessda-dev"
-		module_name = "mgmt-coffeepot"
-		image_tag = "eu.gcr.io/${project_name}/${module_name}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+    {
+        project_name = "cessda-dev"
+        module_name = "mgmt-coffeepot"
+        image_tag = "eu.gcr.io/${project_name}/${module_name}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
         scannerHome = tool 'sonar-scanner'
-	}
+    }
 
     agent any
 
@@ -20,11 +20,11 @@ pipeline{
             steps{
                 echo "Running test suite"
                 sh("ln -s $WORKSPACE /go/src/carsten-coffee-api")
-                sh("cd /go/src/carsten-coffee-api && ./run-tests.sh && pwd && ls -la && ls -la $WORKSPACE")
+                sh("cd /go/src/carsten-coffee-api && ./run-tests.sh")
             }
         }
         stage('Start Sonar scan') {
-		    steps {
+            steps {
                 withSonarQubeEnv('cessda-sonar') {
                     sh "${scannerHome}/bin/sonar-scanner"
                 }
@@ -46,7 +46,7 @@ pipeline{
         stage('Push Docker image'){
             steps{
                 echo 'Tag and push Docker image'
-				sh("gcloud container images add-tag ${image_tag} eu.gcr.io/${project_name}/${module_name}:${env.BRANCH_NAME}-latest")
+                sh("gcloud container images add-tag ${image_tag} eu.gcr.io/${project_name}/${module_name}:${env.BRANCH_NAME}-latest")
             }
         }
         stage('Deploy Docker image'){
