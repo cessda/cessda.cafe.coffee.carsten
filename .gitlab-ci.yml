@@ -5,11 +5,6 @@ stages:
 before_script:
   - ln -s $CI_PROJECT_DIR /go/src/carsten-coffee-api
 
-golang linting:
-  stage: linting
-  image: golang:latest
-  script:
-
 linting, vetting and running the test suite:
   stage: lint_n_vet_n_test
   image: golang:latest
