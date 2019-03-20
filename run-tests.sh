@@ -1,3 +1,6 @@
+#!/bin/bash
+set -ex
+#
 #vetting and running the test suite:
 go get -u github.com/jstemmer/go-junit-report
 go get -u github.com/kardianos/govendor
