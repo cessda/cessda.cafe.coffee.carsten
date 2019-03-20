@@ -16,7 +16,13 @@ pipeline{
             }
             steps{
                 echo "Running test suite"
-                sh("bash run-tests.sh")
+                ln -s /go/src/carsten-coffee-api /root/workspace/${project_name}
+                cd /go/src/carsten-coffee-api
+                go get -u github.com/jstemmer/go-junit-report
+                go get -u github.com/kardianos/govendor
+                govendor sync
+                go vet $(go list ./... | grep -v /vendor/)
+                go test -v 2>&1 | go-junit-report > report.xml
             }
         }
         stage('Start Sonar scan') {
