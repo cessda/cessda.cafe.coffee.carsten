@@ -16,7 +16,7 @@ pipeline{
             }
             steps{
                 echo "Running test suite"
-                sh("ln -s /go/src/carsten-coffee-api ./")
+                sh("ln -s $PWD /go/src/carsten-coffee-api")
                 sh("cd /go/src/carsten-coffee-api && ./run-tests.sh")
             }
         }
