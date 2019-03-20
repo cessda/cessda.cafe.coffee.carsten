@@ -17,7 +17,7 @@ pipeline{
             steps{
                 echo "Running test suite"
                 sh("ln -s $WORKSPACE /go/src/carsten-coffee-api")
-                sh("cd /go/src/carsten-coffee-api && ./run-tests.sh && pwd && ls -la")
+                sh("cd /go/src/carsten-coffee-api && ./run-tests.sh && pwd && ls -la && ls -la $WORKSPACE")
             }
         }
         stage('Start Sonar scan') {
