@@ -2,13 +2,11 @@ stages:
   - lint_n_vet_n_test
   - containerize
 
-before_script:
-  - ln -s $CI_PROJECT_DIR /go/src/carsten-coffee-api
-
 linting, vetting and running the test suite:
   stage: lint_n_vet_n_test
   image: golang:latest
   script:
+    - ln -s $CI_PROJECT_DIR /go/src/carsten-coffee-api
     - cd /go/src/carsten-coffee-api
     - ./run-tests.sh
   artifacts:
