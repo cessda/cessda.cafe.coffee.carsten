@@ -7,4 +7,4 @@ go get -u github.com/kardianos/govendor
 govendor sync
 golint -set_exit_status $(go list ./... | grep -v /vendor/)
 go vet $(go list ./... | grep -v /vendor/)
-go test -v 2>&1 | go-junit-report > report.xml
+go test -coverprofile=coverage.out -v 2>&1 | go-junit-report > report.xml
