@@ -9,10 +9,6 @@ linting, vetting and running the test suite:
     - ln -s $CI_PROJECT_DIR /go/src/carsten-coffee-api
     - cd /go/src/carsten-coffee-api
     - ./run-tests.sh
-  artifacts:
-    when: always
-    reports:
-      junit: report.xml
 
 containerizing:
   stage: containerize
