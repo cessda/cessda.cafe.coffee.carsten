@@ -54,10 +54,5 @@ pipeline{
                 build job: '../cessda.coffeeapi.deployment/master', parameters: [string(name: 'DEPLOYMENT_VERSION', value: BUILD_NUMBER)], wait: false
             }
         }
-        stage('Clean Workspace'){
-            steps{
-                cleanWs()
-            }
-        }
     }
 }
