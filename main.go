@@ -8,8 +8,8 @@ import (
 	"time"
 )
 
-type coffeeOrder struct {
-	Type string `json:"type"`
+type coffeeJob struct {
+	Product string `json:"product"`
 }
 
 func myRequestLogger(log *logrus.Logger) gin.HandlerFunc {
@@ -68,48 +68,48 @@ func setupRouter() *gin.Engine {
 
 	})
 
-	r.GET("/order-history", func(c *gin.Context) {
+	r.GET("/job-history", func(c *gin.Context) {
 
-		c.JSON(http.StatusOK, getAllOrders())
+		c.JSON(http.StatusOK, getAllJobs())
 
 	})
 
-	r.GET("/order-history/:ID", func(c *gin.Context) {
+	r.GET("/job-history/:ID", func(c *gin.Context) {
 		ID := c.Param("ID")
-		order, success := getOrderbyID(ID)
+		job, success := getJobbyID(ID)
 
 		if !success {
-			c.JSON(http.StatusNotFound, gin.H{"message": "Order not found!"})
+			c.JSON(http.StatusNotFound, gin.H{"message": "Job not found!"})
 		} else {
-			c.JSON(http.StatusOK, order)
+			c.JSON(http.StatusOK, job)
 		}
 	})
 
-	r.POST("/order-coffee", func(c *gin.Context) {
-		var incomingOrder coffeeOrder
-		c.BindJSON(&incomingOrder)
+	r.POST("/start-job", func(c *gin.Context) {
+		var incomingJob coffeeJob
+		c.BindJSON(&incomingJob)
 
-		result, success, systemStatus := newOrder(incomingOrder.Type)
+		result, success, systemStatus := newJob(incomingJob.Product)
 
 		if !success {
 			log.WithFields(logrus.Fields{
 				"requestId": c.MustGet("RequestId"),
-			}).Debug("Error placing order")
+			}).Debug("Error starting job")
 			c.JSON(http.StatusBadRequest, gin.H{"message": systemStatus})
 		} else {
 			log.WithFields(logrus.Fields{
 				"requestId": c.MustGet("RequestId"),
-				"type":      result.Type,
-				"readyAt":   result.ReadyAt,
-			}).Debug("Order placed")
+				"product":   result.Product,
+				"jobReady":  result.JobReady,
+			}).Debug("Job started")
 			c.JSON(http.StatusOK, result)
 		}
 
 	})
 
-	r.GET("/retrieve-coffee/:ID", func(c *gin.Context) {
+	r.GET("/retrieve-job/:ID", func(c *gin.Context) {
 		ID := c.Param("ID")
-		order, success := retrieveOrder(ID)
+		job, success := retrieveJob(ID)
 		log.WithFields(logrus.Fields{
 			"requestId": c.MustGet("RequestId"),
 			"success":   success,
@@ -118,11 +118,11 @@ func setupRouter() *gin.Engine {
 			log.WithFields(logrus.Fields{
 				"requestId": c.MustGet("RequestId"),
 				"success":   success,
-				"order-id":  ID,
+				"job-id":    ID,
 			}).Debug("Failed to retrieve Coffee")
 			c.JSON(http.StatusBadRequest, gin.H{"message": "Nope!"})
 		} else {
-			c.JSON(http.StatusOK, order)
+			c.JSON(http.StatusOK, job)
 		}
 	})
 
