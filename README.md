@@ -1,6 +1,6 @@
-# carsten-coffee-api
+# CESSDA Café: Carsten's Coffee Machine
 
-Golang implementation of COFFEE API using [Gin Gonic](https://gin-gonic.github.io/gin/).
+Golang implementation of CESSDA Café Coffee machine using [Gin Gonic](https://gin-gonic.github.io/gin/).
 
 ## Installation
 
