@@ -27,6 +27,16 @@ type coffeeJob struct {
 	Product string `json:"product"`
 }
 
+// Success response
+// swagger:response succResp
+type swaggSuccResp struct {
+	// in:body
+	Body struct {
+		// Detailed message
+		Message string `json:"message"`
+	}
+}
+
 func myRequestLogger(log *logrus.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
@@ -69,6 +79,11 @@ func setupRouter() *gin.Engine {
 		c.String(http.StatusOK, "Hello World!")
 	})
 
+	// swagger:route GET /healthcheck healthReq
+	// Perform a healthcheck.
+	// If all is fine, this will tell you.
+	// responses:
+	//  200: succResp
 	r.GET("/healthcheck", func(c *gin.Context) {
 
 		c.JSON(http.StatusOK, gin.H{"message": "Ok"})
