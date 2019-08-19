@@ -49,7 +49,7 @@ pipeline{
         }
         stage('Run Sonar Scan') {
             steps {
-                withSonarQubeEnv {
+                withSonarQubeEnv() {
                     sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
