@@ -15,9 +15,10 @@
 pipeline{
     environment
     {
-        project_name = "cessda-dev"
-        module_name = "mgmt-coffeepot"
-        image_tag = "eu.gcr.io/${project_name}/${module_name}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+        project_name = "${GCP_PROJECT}"
+        product_name = "cafe"
+        module_name = "coffeepot"
+        image_tag = "${docker_repo}/${module_name}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
         scannerHome = tool 'sonar-scanner'
     }
 
@@ -36,8 +37,13 @@ pipeline{
                 sh("ln -s $WORKSPACE /go/src/carsten-coffee-api")
                 sh("cd /go/src/carsten-coffee-api && ./run-tests.sh")
             }
+            post {
+                always {
+                    junit 'junit.xml'
+                }
+            }
         }
-        stage('Start Sonar scan') {
+        stage('Run Sonar Scan') {
             steps {
                 withSonarQubeEnv('cessda-sonar') {
                     sh "${scannerHome}/bin/sonar-scanner"
@@ -53,7 +59,7 @@ pipeline{
         }
         stage("Build Docker Image"){
             steps{
-                echo "Building Docker image using Dockerfile with tag"
+                echo "Building Docker image using Dockerfile with tag ${image_tag}"
                 sh("docker build -t ${image_tag} .")
             }
         }
@@ -62,18 +68,13 @@ pipeline{
                 echo 'Tag and push Docker image'
                 sh("gcloud auth configure-docker")
                 sh("docker push ${image_tag}")
-                sh("gcloud container images add-tag ${image_tag} eu.gcr.io/${project_name}/${module_name}:${env.BRANCH_NAME}-latest")
+                sh("gcloud container images add-tag ${image_tag} ${docker_repo}/${module_name}:${env.BRANCH_NAME}-latest")
             }
         }
-        stage('Deploy Docker image'){
+        /*stage('Deploy Docker image'){
             steps{
                 build job: '../cessda.coffeeapi.deployment/master', parameters: [string(name: 'DEPLOYMENT_VERSION', value: BUILD_NUMBER)], wait: false
             }
-        }
-    }
-	post {
-        always {
-            junit 'junit.xml'
-        }
+        }*/
     }
 }
