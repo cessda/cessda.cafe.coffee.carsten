@@ -13,6 +13,10 @@
 // limitations under the License.
 
 pipeline{
+    options {
+        buildDiscarder logRotator(artifactNumToKeepStr: '5', numToKeepStr: '10')
+    }
+
     environment
     {
         project_name = "${GCP_PROJECT}"
