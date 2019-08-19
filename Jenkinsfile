@@ -49,7 +49,7 @@ pipeline{
         }
         stage('Run Sonar Scan') {
             steps {
-                withSonarQubeEnv('cessda-sonar') {
+                withSonarQubeEnv {
                     sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
@@ -75,10 +75,10 @@ pipeline{
                 sh("gcloud container images add-tag ${image_tag} ${docker_repo}/${module_name}:${env.BRANCH_NAME}-latest")
             }
         }
-        /*stage('Deploy Docker image'){
+        stage('Deploy Docker image'){
             steps{
-                build job: '../cessda.coffeeapi.deployment/master', parameters: [string(name: 'DEPLOYMENT_VERSION', value: BUILD_NUMBER)], wait: false
+                build job: '../cessda.cafe.deployment/master', parameters: [string(name: 'coffeepot_image_tag', value: '${image_tag}'), string(name: 'module', value: 'coffeepot')], wait: false
             }
-        }*/
+        }
     }
 }
