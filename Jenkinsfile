@@ -77,7 +77,7 @@ pipeline{
         }
         stage('Deploy Docker image'){
             steps{
-                build job: '../cessda.cafe.deployment/master', parameters: [string(name: 'coffeepot_image_tag', value: '${image_tag}'), string(name: 'module', value: 'coffeepot')], wait: false
+                build job: '../cessda.cafe.deployment/master', parameters: [string(name: 'coffeepot_image_tag', value: "${image_tag}"), string(name: 'module', value: 'coffeepot')], wait: false
             }
         }
     }
