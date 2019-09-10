@@ -101,6 +101,12 @@
 			"revisionTime": "2018-10-28T12:50:25Z"
 		},
 		{
+			"checksumSHA1": "XAGndbmKH374GMFHOrgi5MThUYQ=",
+			"path": "github.com/seatgeek/logrus-gelf-formatter",
+			"revision": "ce23ecb3f367c85481346bcc4e4ca65d4c5ca262",
+			"revisionTime": "2018-08-29T22:07:24Z"
+		},
+		{
 			"checksumSHA1": "xTmkE7bYrgO9gXGRDPIba8A5M/U=",
 			"path": "github.com/sirupsen/logrus",
 			"revision": "cdb2f3857cfba7388d28dfe38316b0a39e694215",

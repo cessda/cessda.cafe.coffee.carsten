@@ -18,6 +18,7 @@ package main
 import (
 	"github.com/atarantini/ginrequestid"
 	"github.com/gin-gonic/gin"
+	gelf "github.com/seatgeek/logrus-gelf-formatter"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
@@ -71,7 +72,8 @@ func setupRouter() *gin.Engine {
 	r.Use(ginrequestid.RequestId())
 
 	log := logrus.New()
-	log.SetLevel(logrus.DebugLevel)
+	log.Formatter = new(gelf.GelfFormatter)
+	log.Level = logrus.DebugLevel
 
 	r.Use(myRequestLogger(log), gin.Recovery())
 
