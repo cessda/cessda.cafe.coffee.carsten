@@ -53,7 +53,7 @@ func systemBrewing() bool {
 // check whether a coffee needs picking up
 func jobWaiting() bool {
 	for _, o := range jobList {
-		if len(o.JobRetrieved) != 0 {
+		if len(o.JobRetrieved) == 0 {
 			return true
 		}
 	}
@@ -86,7 +86,7 @@ func retrieveJob(id string) (*job, bool) {
 		if o.ID == id {
 			// only retrieve when done and only once
 			readytime, _ := time.Parse(time.RFC3339, o.JobReady)
-			if time.Now().After(readytime) && len(o.JobRetrieved) != 0 {
+			if time.Now().After(readytime) && len(o.JobRetrieved) == 0 {
 				o.JobRetrieved = time.Now().Format(time.RFC3339)
 				jobList[index].JobRetrieved = o.JobRetrieved
 				return &o, true
