@@ -22,7 +22,7 @@ pipeline{
         project_name = "${GCP_PROJECT}"
         product_name = "cafe"
         module_name = "coffeepot"
-        image_tag = "${docker_repo}/${module_name}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+        image_tag = "${docker_repo}/${product_name}-${module_name}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
         scannerHome = tool 'sonar-scanner'
     }
 
@@ -72,7 +72,7 @@ pipeline{
                 echo 'Tag and push Docker image'
                 sh("gcloud auth configure-docker")
                 sh("docker push ${image_tag}")
-                sh("gcloud container images add-tag ${image_tag} ${docker_repo}/${module_name}:${env.BRANCH_NAME}-latest")
+                sh("gcloud container images add-tag ${image_tag} ${docker_repo}/${product_name}-${module_name}:${env.BRANCH_NAME}-latest")
             }
         }
         stage('Deploy Docker image'){
