@@ -87,7 +87,7 @@ func retrieveJob(id string) (*job, bool) {
 			// only retrieve when done and only once
 			readytime, _ := time.Parse(time.RFC3339, o.JobReady)
 			if time.Now().After(readytime) && len(o.JobRetrieved) == 0 {
-				//o.JobRetrieved = time.Now().Format(time.RFC3339)
+				o.JobRetrieved = time.Now().Format(time.RFC3339)
 				jobList[index].JobRetrieved = o.JobRetrieved
 				return &o, true
 			}
