@@ -25,6 +25,7 @@ import (
 )
 
 type coffeeJob struct {
+	ID      string `json:"jobId"`
 	Product string `json:"product"`
 }
 
@@ -121,7 +122,7 @@ func setupRouter() *gin.Engine {
 		var incomingJob coffeeJob
 		c.BindJSON(&incomingJob)
 
-		result, success, systemStatus := newJob(incomingJob.Product)
+		result, success, systemStatus := newJob(incomingJob.ID, incomingJob.Product)
 
 		if !success {
 			log.WithFields(logrus.Fields{

@@ -15,7 +15,7 @@
 package main
 
 import (
-	"github.com/satori/go.uuid"
+	//"github.com/satori/go.uuid"
 	"net/http"
 	"time"
 )
@@ -30,7 +30,7 @@ type job struct {
 
 // Initial coffe jobs
 var jobList = []job{
-	job{ID: "c1be03bf-d9cc-486b-92af-3d91c27d3ba5", Product: "COFFEE", JobStarted: "2019-02-16T11:31:47+0000", JobReady: "2019-02-16T11:32:34+0000"},
+	job{ID: "c1be03bf-d9cc-486b-92af-3d91c27d3ba5", Product: "COFFEE", JobStarted: "2019-02-16T11:31:47+0000", JobReady: "2019-02-16T11:32:34+0000", JobRetrieved: "2019-02-16T10:33:00+0000"},
 	job{ID: "90fcb5bd-0f08-4656-8306-4e1efaaea2b0", Product: "CAPPUCCINO", JobStarted: "2019-02-16T10:31:47+0000", JobReady: "2019-02-16T10:32:34+0000", JobRetrieved: "2019-02-16T10:33:00+0000"},
 }
 
@@ -87,7 +87,7 @@ func retrieveJob(id string) (*job, bool) {
 			// only retrieve when done and only once
 			readytime, _ := time.Parse(time.RFC3339, o.JobReady)
 			if time.Now().After(readytime) && len(o.JobRetrieved) == 0 {
-				o.JobRetrieved = time.Now().Format(time.RFC3339)
+				//o.JobRetrieved = time.Now().Format(time.RFC3339)
 				jobList[index].JobRetrieved = o.JobRetrieved
 				return &o, true
 			}
@@ -108,7 +108,7 @@ func getJobbyID(id string) (*job, bool) {
 }
 
 // create a new coffee job
-func newJob(Product string) (*job, bool, string) {
+func newJob(ID string, Product string) (*job, bool, string) {
 
 	systemStatusCode, systemStatusMessage := systemStatus()
 
@@ -116,10 +116,10 @@ func newJob(Product string) (*job, bool, string) {
 		return nil, false, systemStatusMessage
 	}
 
-	myjobid, _ := uuid.NewV4()
+	//myjobid, _ := uuid.NewV4()
 
 	var newJob job
-	newJob.ID = myjobid.String()
+	newJob.ID = ID
 	newJob.Product = Product
 	newJob.JobStarted = time.Now().Format(time.RFC3339)
 	newJob.JobReady = time.Now().Add(time.Minute * 1).Format(time.RFC3339)
