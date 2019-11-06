@@ -22,7 +22,7 @@ pipeline{
     {
         project_name = "${GCP_PROJECT}"
         product_name = "cafe"
-        module_name = "coffeepot"
+        module_name = "coffee-carsten"
         image_tag = "${docker_repo}/${product_name}-${module_name}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
         scannerHome = tool 'sonar-scanner'
     }
@@ -78,7 +78,7 @@ pipeline{
         }
         stage('Deploy Docker image'){
             steps{
-                build job: '../cessda.cafe.deployment/master', parameters: [string(name: 'coffeepot_image_tag', value: "${image_tag}"), string(name: 'module', value: 'coffeepot')], wait: false
+                build job: '../cessda.cafe.deployment/master', parameters: [string(name: "${module_name}_image_tag", value: "${image_tag}"), string(name: 'module', value: "${module_name}")], wait: false
             }
         }
     }
