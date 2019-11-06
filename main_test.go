@@ -34,7 +34,7 @@ func TestRootRoute(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
-	assert.Equal(t, "Hello World!", w.Body.String())
+	assert.Equal(t, "Welcome to the CESSDA Café!", w.Body.String())
 }
 
 // Validate HealthCeck path
