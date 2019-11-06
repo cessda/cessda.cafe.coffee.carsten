@@ -79,7 +79,7 @@ func setupRouter() *gin.Engine {
 	r.Use(myRequestLogger(log), gin.Recovery())
 
 	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello World!")
+		c.String(http.StatusOK, "Welcome to the CESSDA Café!")
 	})
 
 	// swagger:route GET /healthcheck healthReq
