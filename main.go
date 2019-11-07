@@ -19,8 +19,10 @@ import (
 	"github.com/atarantini/ginrequestid"
 	"github.com/gin-gonic/gin"
 	//gelf "github.com/seatgeek/logrus-gelf-formatter"
+	"github.com/gemnasium/logrus-graylog-hook"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -74,6 +76,13 @@ func setupRouter() *gin.Engine {
 
 	log := logrus.New()
 	//log.Formatter = new(gelf.GelfFormatter)
+
+	graylogServer, exists := os.LookupEnv("GRAYLOG_SERVER")
+	if exists {
+		hook := graylog.NewGraylogHook(graylogServer, map[string]interface{}{"source": "coffee-carsten"})
+		log.AddHook(hook)
+	}
+
 	log.Level = logrus.DebugLevel
 
 	r.Use(myRequestLogger(log), gin.Recovery())
@@ -162,9 +171,20 @@ func setupRouter() *gin.Engine {
 	return r
 }
 
+// Get environment variable with a default
+func getEnv(name string, defaultValue string) string {
+	value, exists := os.LookupEnv(name)
+	if exists {
+		return value
+	}
+	return defaultValue
+}
+
 func main() {
 
+	coffeePort := getEnv("COFFEE_PORT", "1337")
+
 	r := setupRouter()
-	r.Run(":1337")
+	r.Run(":" + coffeePort)
 
 }

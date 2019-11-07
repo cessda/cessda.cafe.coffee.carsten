@@ -15,6 +15,16 @@
 			"revisionTime": "2018-08-30T19:11:22Z"
 		},
 		{
+			"checksumSHA1": "pqO1kS3HRVvCd9WaKAumcQh/ntM=",
+			"path": "github.com/gemnasium/logrus-graylog-hook",
+			"revision": "b3082031ff2ac00241f0499cafca1dfabec6b387",
+			"revisionTime": "2019-01-10T21:19:49Z"
+		},
+		{
+			"path": "github.com/gemnasium/logrus-graylog-hook/v3",
+			"revision": ""
+		},
+		{
 			"checksumSHA1": "QeKwBtN2df+j+4stw3bQJ6yO4EY=",
 			"path": "github.com/gin-contrib/sse",
 			"revision": "a7658810eb745c2f22927282dea478278103a897",
@@ -87,6 +97,12 @@
 			"path": "github.com/modern-go/reflect2",
 			"revision": "94122c33edd36123c84d5368cfb2b69df93a0ec8",
 			"revisionTime": "2018-07-18T01:23:57Z"
+		},
+		{
+			"checksumSHA1": "I7hloldMJZTqUx6hbVDp5nk9fZQ=",
+			"path": "github.com/pkg/errors",
+			"revision": "27936f6d90f9c8e1145f11ed52ffffbfdb9e0af7",
+			"revisionTime": "2019-02-27T00:00:51Z"
 		},
 		{
 			"checksumSHA1": "LuFv4/jlrmFNnDb/5SCSEPAM9vU=",

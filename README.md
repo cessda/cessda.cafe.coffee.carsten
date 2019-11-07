@@ -11,6 +11,19 @@ install the dependencies with [Govendor](https://github.com/kardianos/govendor).
 govendor sync
 ```
 
+## Options
+
+To specify a port other then the default, set the environment variable
+```bash
+export COFFEE_PORT="1337"
+```
+
+To send logs in Gelf format to a Graylog server via UDP, provide the address and port
+```bash
+export GRAYLOG_SERVER="<server-ip>:<server-port>"
+```
+
+
 ## Execution
 
 Simply run
@@ -20,3 +33,4 @@ go run .
 ```
 
 and access <http://localhost:1337.>
+
