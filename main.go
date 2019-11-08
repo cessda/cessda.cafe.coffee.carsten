@@ -17,9 +17,8 @@ package main
 
 import (
 	"github.com/atarantini/ginrequestid"
-	"github.com/gin-gonic/gin"
-	//gelf "github.com/seatgeek/logrus-gelf-formatter"
 	"github.com/gemnasium/logrus-graylog-hook"
+	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
@@ -75,11 +74,10 @@ func setupRouter() *gin.Engine {
 	r.Use(ginrequestid.RequestId())
 
 	log := logrus.New()
-	//log.Formatter = new(gelf.GelfFormatter)
 
 	graylogServer, exists := os.LookupEnv("GRAYLOG_SERVER")
 	if exists {
-		hook := graylog.NewGraylogHook(graylogServer, map[string]interface{}{"source": "coffee-carsten"})
+		hook := graylog.NewGraylogHook(graylogServer, map[string]interface{}{"cessda_component": "coffee-carsten", "cessda_product": "CESSDA Café"})
 		log.AddHook(hook)
 	}
 
