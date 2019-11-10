@@ -15,14 +15,10 @@
 			"revisionTime": "2018-08-30T19:11:22Z"
 		},
 		{
-			"checksumSHA1": "pqO1kS3HRVvCd9WaKAumcQh/ntM=",
-			"path": "github.com/gemnasium/logrus-graylog-hook",
-			"revision": "b3082031ff2ac00241f0499cafca1dfabec6b387",
-			"revisionTime": "2019-01-10T21:19:49Z"
-		},
-		{
-			"path": "github.com/gemnasium/logrus-graylog-hook/v3",
-			"revision": ""
+			"checksumSHA1": "v1WuXuPvjITwtk2S1wTAX6NVNiA=",
+			"path": "github.com/fabienm/go-logrus-formatters",
+			"revision": "813722596867d5906dfe67a4cdd1c7b0b743cb68",
+			"revisionTime": "2018-12-10T10:33:27Z"
 		},
 		{
 			"checksumSHA1": "QeKwBtN2df+j+4stw3bQJ6yO4EY=",
@@ -75,10 +71,10 @@
 			"revisionTime": "2019-02-08T07:56:42Z"
 		},
 		{
-			"checksumSHA1": "r6ZMyP/HsdeToXIxvgP3ntL6Bds=",
+			"checksumSHA1": "Aulh7C5SVOA4Jzt5eHNH6197Mbk=",
 			"path": "github.com/konsorten/go-windows-terminal-sequences",
-			"revision": "5c8c8bd35d3832f5d134ae1e1e375b69a4d25242",
-			"revisionTime": "2018-10-04T22:41:46Z"
+			"revision": "f55edac94c9bbba5d6182a4be46d86a2c9b5b50e",
+			"revisionTime": "2019-02-26T22:47:05Z"
 		},
 		{
 			"checksumSHA1": "GiVgQkx5acnq+JZtYiuHPlhHoso=",
@@ -117,10 +113,10 @@
 			"revisionTime": "2018-10-28T12:50:25Z"
 		},
 		{
-			"checksumSHA1": "xTmkE7bYrgO9gXGRDPIba8A5M/U=",
+			"checksumSHA1": "a+HW4KfxlTA1ExAUrW8w6EKYoxM=",
 			"path": "github.com/sirupsen/logrus",
-			"revision": "cdb2f3857cfba7388d28dfe38316b0a39e694215",
-			"revisionTime": "2019-02-10T13:00:17Z"
+			"revision": "67a7fdcf741f4d5cee82cb9800994ccfd4393ad0",
+			"revisionTime": "2019-10-26T11:39:18Z"
 		},
 		{
 			"checksumSHA1": "qTNfPVU4Tz/JDMcSeL+k9HX2cV8=",
@@ -141,10 +137,10 @@
 			"revisionTime": "2019-02-10T12:59:10Z"
 		},
 		{
-			"checksumSHA1": "BInQpkMlU5kTyjhUHjbvRIKz2EE=",
+			"checksumSHA1": "3MIBhaOhlaGUd/C7WtWDnS3JWSc=",
 			"path": "golang.org/x/sys/unix",
-			"revision": "41f3e6584952bb034a481797859f6ab34b6803bd",
-			"revisionTime": "2019-02-04T12:38:20Z"
+			"revision": "d32e6e3b99c40f2bfaea45ea9596ed539eed1c0d",
+			"revisionTime": "2019-11-10T13:49:38Z"
 		},
 		{
 			"checksumSHA1": "IwB9A6UjgGYrHIBFJEamnrXPeNo=",

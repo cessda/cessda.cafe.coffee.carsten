@@ -17,7 +17,7 @@ package main
 
 import (
 	"github.com/atarantini/ginrequestid"
-	"github.com/gemnasium/logrus-graylog-hook"
+	"github.com/fabienm/go-logrus-formatters"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -75,10 +75,10 @@ func setupRouter() *gin.Engine {
 
 	log := logrus.New()
 
-	graylogServer, exists := os.LookupEnv("GRAYLOG_SERVER")
+	_, exists := os.LookupEnv("GELF_LOGGING")
 	if exists {
-		hook := graylog.NewGraylogHook(graylogServer, map[string]interface{}{"cessda_component": "coffee-carsten", "cessda_product": "CESSDA Café"})
-		log.AddHook(hook)
+		hostname, _ := os.Hostname()
+		log.SetFormatter(formatters.NewGelf(hostname))
 	}
 
 	log.Level = logrus.DebugLevel
