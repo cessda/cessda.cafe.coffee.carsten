@@ -61,22 +61,26 @@ func jobWaiting() bool {
 }
 
 // check overall system status
-func systemStatus() (int, string) {
+func systemStatus() (int, int, string) {
 	var systemStatusCode int
+	var systemHTTPStatusCode int
 	var systemStatusMessage string
 
 	if systemBrewing() {
-		systemStatusCode = http.StatusConflict
+		systemStatusCode = 1
+		systemHTTPStatusCode = http.StatusConflict
 		systemStatusMessage = "System Brewing -- Please wait!"
 	} else if jobWaiting() {
-		systemStatusCode = http.StatusUnauthorized
+		systemStatusCode = 2
+		systemHTTPStatusCode = http.StatusUnauthorized
 		systemStatusMessage = "Coffee Waiting -- Come and get it!"
 	} else {
-		systemStatusCode = http.StatusOK
+		systemStatusCode = 0
+		systemHTTPStatusCode = http.StatusOK
 		systemStatusMessage = "System Ready!"
 	}
 
-	return systemStatusCode, systemStatusMessage
+	return systemStatusCode, systemHTTPStatusCode, systemStatusMessage
 
 }
 
@@ -110,9 +114,9 @@ func getJobbyID(id string) (*job, bool) {
 // create a new coffee job
 func newJob(ID string, Product string) (*job, bool, string) {
 
-	systemStatusCode, systemStatusMessage := systemStatus()
+	systemStatusCode, _, systemStatusMessage := systemStatus()
 
-	if !(systemStatusCode == http.StatusOK) {
+	if !(systemStatusCode == 0) {
 		return nil, false, systemStatusMessage
 	}
 

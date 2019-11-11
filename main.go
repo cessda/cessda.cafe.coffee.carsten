@@ -22,6 +22,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -102,9 +103,17 @@ func setupRouter() *gin.Engine {
 
 	r.GET("/status", func(c *gin.Context) {
 
-		systemStatusCode, systemStatusMessage := systemStatus()
+		_, systemHTTPStatusCode, systemStatusMessage := systemStatus()
 
-		c.JSON(systemStatusCode, gin.H{"message": systemStatusMessage})
+		c.JSON(systemHTTPStatusCode, gin.H{"message": systemStatusMessage})
+
+	})
+
+	r.GET("/metrics", func(c *gin.Context) {
+
+		systemStatusCode, _, _ := systemStatus()
+
+		c.String(http.StatusOK, "# HELP machine_status The system status 0=idle,1=brewing,2=blocked or other.\n# TYPE machine_status gauge \nmachine_status "+strconv.Itoa(systemStatusCode))
 
 	})
 
@@ -129,13 +138,13 @@ func setupRouter() *gin.Engine {
 		var incomingJob coffeeJob
 		c.BindJSON(&incomingJob)
 
-		result, success, systemStatus := newJob(incomingJob.ID, incomingJob.Product)
+		result, success, systemStatusMessage := newJob(incomingJob.ID, incomingJob.Product)
 
 		if !success {
 			log.WithFields(logrus.Fields{
 				"requestId": c.MustGet("RequestId"),
 			}).Debug("Error starting job")
-			c.JSON(http.StatusBadRequest, gin.H{"message": systemStatus})
+			c.JSON(http.StatusBadRequest, gin.H{"message": systemStatusMessage})
 		} else {
 			log.WithFields(logrus.Fields{
 				"requestId": c.MustGet("RequestId"),
