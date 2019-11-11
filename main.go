@@ -113,7 +113,7 @@ func setupRouter() *gin.Engine {
 
 		systemStatusCode, _, _ := systemStatus()
 
-		c.String(http.StatusOK, "# HELP machine_status The system status 0=idle,1=brewing,2=blocked or other.\n# TYPE machine_status gauge \nmachine_status "+strconv.Itoa(systemStatusCode))
+		c.String(http.StatusOK, "# HELP coffee_machine_status The system status 0=idle,1=brewing,2=blocked or other.\n# TYPE coffee_machine_status gauge \ncoffe_machine_status "+strconv.Itoa(systemStatusCode))
 
 	})
 
