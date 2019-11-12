@@ -18,9 +18,24 @@ To specify a port other then the default, set the environment variable
 export COFFEE_PORT="1337"
 ```
 
-To send logs in Gelf format to a Graylog server via UDP, provide the address and port
+To log log in Gelf format, use the follwing environment setting
 ```bash
-export GRAYLOG_SERVER="<server-ip>:<server-port>"
+export GELF_LOGGING="true"
+```
+
+## Test suite
+
+The test suite can be executed by calling
+
+```bash
+make test
+```
+
+## Documentation
+
+To produce swagger.json, call
+```bash
+make swagger
 ```
 
 
@@ -29,7 +44,7 @@ export GRAYLOG_SERVER="<server-ip>:<server-port>"
 Simply run
 
 ```bash
-go run .
+make run
 ```
 
 and access <http://localhost:1337.>
