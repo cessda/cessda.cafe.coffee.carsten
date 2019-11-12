@@ -31,7 +31,7 @@ The test suite can be executed by calling
 make test
 ```
 
-## Documentation
+## API Spec
 
 To produce swagger.json, call
 ```bash
