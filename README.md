@@ -71,3 +71,24 @@ with response
 }
 ```
 
+Follow it up with
+```bash
+curl -s http://localhost:1337/retrieve-job/00000000-BBBB-0000-BBBB-000000000000
+```
+to get
+```json
+{
+  "message": "Job not ready"
+}
+```
+and later
+```json
+{
+  "jobId": "00000000-BBBB-0000-BBBB-000000000000",
+  "product": "COFFEE",
+  "jobStarted": "2019-08-01T00:00:01.000Z",
+  "jobReady": "2019-08-01T00:00:31.000Z",
+  "jobRetrieved": "2019-08-01T00:01:31.000Z"
+}
+```
+

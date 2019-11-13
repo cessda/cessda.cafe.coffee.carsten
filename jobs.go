@@ -87,20 +87,23 @@ func systemStatus() (int, int, string) {
 }
 
 // set a sepcific job to retrieved if it`s done but still waiting
-func retrieveJob(id string) (*job, bool) {
+func retrieveJob(id string) (*job, bool, string) {
 	for index, o := range jobList {
 		if o.ID == id {
 			// only retrieve when done and only once
 			readytime, _ := time.Parse(time.RFC3339, o.JobReady)
-			if time.Now().After(readytime) && len(o.JobRetrieved) == 0 {
-				o.JobRetrieved = time.Now().Format(time.RFC3339)
-				jobList[index].JobRetrieved = o.JobRetrieved
-				return &o, true
+			if time.Now().After(readytime) {
+				if len(o.JobRetrieved) == 0 {
+					o.JobRetrieved = time.Now().Format(time.RFC3339)
+					jobList[index].JobRetrieved = o.JobRetrieved
+					return &o, true, ""
+				}
+				return &o, false, "Job already retrieved"
 			}
-			return &o, false
+			return &o, false, "Job not ready"
 		}
 	}
-	return nil, false
+	return nil, false, "Job unknown"
 }
 
 // return a job

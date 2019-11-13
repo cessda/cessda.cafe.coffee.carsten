@@ -158,7 +158,7 @@ func setupRouter() *gin.Engine {
 
 	r.GET("/retrieve-job/:ID", func(c *gin.Context) {
 		ID := c.Param("ID")
-		job, success := retrieveJob(ID)
+		job, success, message := retrieveJob(ID)
 		log.WithFields(logrus.Fields{
 			"requestId": c.MustGet("RequestId"),
 			"success":   success,
@@ -169,13 +169,13 @@ func setupRouter() *gin.Engine {
 				"success":   success,
 				"job-id":    ID,
 			}).Debug("Failed to retrieve Coffee")
-			c.JSON(http.StatusBadRequest, gin.H{"message": "Nope!"})
+			c.JSON(http.StatusBadRequest, gin.H{"message": message})
 		} else {
 			c.JSON(http.StatusOK, job)
 		}
 	})
 
-	// swagger:route POST /reset-button healthReq
+	// swagger:route POST /reset-button resetReq
 	// Reset the Machine.
 	// responses:
 	//  200: succResp
