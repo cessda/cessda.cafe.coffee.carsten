@@ -24,6 +24,9 @@ test: prep lint
 	# coverage report for use by sonar
 	go test -coverprofile=coverage.out -v -json 2>&1 > report.json
 
+build: prep
+	go build -v .
+
 run:
 	go run .
 

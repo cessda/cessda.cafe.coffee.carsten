@@ -15,7 +15,7 @@
 package main
 
 import (
-	//"github.com/satori/go.uuid"
+	"github.com/satori/go.uuid"
 	"net/http"
 	"time"
 )
@@ -28,15 +28,17 @@ type job struct {
 	JobRetrieved string `json:"jobRetrieved"`
 }
 
-// Initial coffe jobs
-var jobList = []job{
-	job{ID: "c1be03bf-d9cc-486b-92af-3d91c27d3ba5", Product: "COFFEE", JobStarted: "2019-02-16T11:31:47+0000", JobReady: "2019-02-16T11:32:34+0000", JobRetrieved: "2019-02-16T10:33:00+0000"},
-	job{ID: "90fcb5bd-0f08-4656-8306-4e1efaaea2b0", Product: "CAPPUCCINO", JobStarted: "2019-02-16T10:31:47+0000", JobReady: "2019-02-16T10:32:34+0000", JobRetrieved: "2019-02-16T10:33:00+0000"},
-}
+// Initially empty coffe jobs
+var jobList = []job{}
 
 // return entire job history
 func getAllJobs() []job {
 	return jobList
+}
+
+// reset the machine for testing
+func resetButton() {
+	jobList = []job{}
 }
 
 // check whether a coffee is still brewing
@@ -112,7 +114,8 @@ func getJobbyID(id string) (*job, bool) {
 }
 
 // create a new coffee job
-func newJob(ID string, Product string) (*job, bool, string) {
+func newJob(sentJobID string, Product string) (*job, bool, string) {
+	var myJobID string
 
 	systemStatusCode, _, systemStatusMessage := systemStatus()
 
@@ -120,10 +123,15 @@ func newJob(ID string, Product string) (*job, bool, string) {
 		return nil, false, systemStatusMessage
 	}
 
-	//myjobid, _ := uuid.NewV4()
+	if len(sentJobID) == 0 {
+		myJobIDUUID, _ := uuid.NewV4()
+		myJobID = myJobIDUUID.String()
+	} else {
+		myJobID = sentJobID
+	}
 
 	var newJob job
-	newJob.ID = ID
+	newJob.ID = myJobID
 	newJob.Product = Product
 	newJob.JobStarted = time.Now().Format(time.RFC3339)
 	newJob.JobReady = time.Now().Add(time.Minute * 1).Format(time.RFC3339)

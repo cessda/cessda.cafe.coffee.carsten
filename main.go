@@ -175,6 +175,18 @@ func setupRouter() *gin.Engine {
 		}
 	})
 
+	// swagger:route POST /reset-button healthReq
+	// Reset the Machine.
+	// responses:
+	//  200: succResp
+	r.POST("/reset-button", func(c *gin.Context) {
+		resetButton()
+		log.WithFields(logrus.Fields{
+			"requestId": c.MustGet("RequestId"),
+		}).Debug("Machine reset!")
+		c.JSON(http.StatusOK, gin.H{"message": "Machine reset!"})
+	})
+
 	return r
 }
 
