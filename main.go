@@ -48,8 +48,10 @@ func myRequestLogger(log *logrus.Logger) gin.HandlerFunc {
 
 		start := time.Now()
 
+		log.Debug(c.Request)
+
 		log.WithFields(logrus.Fields{
-			"method":    "GET",
+			"method":    c.Request.Method,
 			"requestId": c.MustGet("RequestId"),
 			"endpoint":  path,
 		}).Debug("request received")
@@ -59,7 +61,7 @@ func myRequestLogger(log *logrus.Logger) gin.HandlerFunc {
 		elapsed := time.Since(start)
 
 		log.WithFields(logrus.Fields{
-			"method":       "GET",
+			"method":       c.Request.Method,
 			"requestId":    c.MustGet("RequestId"),
 			"status":       http.StatusOK,
 			"responsetime": elapsed,
@@ -138,13 +140,13 @@ func setupRouter() *gin.Engine {
 		var incomingJob coffeeJob
 		c.BindJSON(&incomingJob)
 
-		result, success, systemStatusMessage := newJob(incomingJob.ID, incomingJob.Product)
+		result, success := newJob(incomingJob.ID, incomingJob.Product)
 
 		if !success {
 			log.WithFields(logrus.Fields{
 				"requestId": c.MustGet("RequestId"),
 			}).Debug("Error starting job")
-			c.JSON(http.StatusBadRequest, gin.H{"message": systemStatusMessage})
+			c.JSON(http.StatusBadRequest, gin.H{"message": "Machine busy!"})
 		} else {
 			log.WithFields(logrus.Fields{
 				"requestId": c.MustGet("RequestId"),

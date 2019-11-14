@@ -117,13 +117,13 @@ func getJobbyID(id string) (*job, bool) {
 }
 
 // create a new coffee job
-func newJob(sentJobID string, Product string) (*job, bool, string) {
+func newJob(sentJobID string, Product string) (*job, bool) {
 	var myJobID string
 
-	systemStatusCode, _, systemStatusMessage := systemStatus()
+	systemStatusCode, _, _ := systemStatus()
 
 	if !(systemStatusCode == 0) {
-		return nil, false, systemStatusMessage
+		return nil, false
 	}
 
 	if len(sentJobID) == 0 {
@@ -142,6 +142,6 @@ func newJob(sentJobID string, Product string) (*job, bool, string) {
 	jobList = append(jobList, newJob)
 
 	theNewJob, success := getJobbyID(newJob.ID)
-	return theNewJob, success, systemStatusMessage
+	return theNewJob, success
 
 }
