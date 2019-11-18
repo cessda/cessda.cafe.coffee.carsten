@@ -74,7 +74,7 @@ pipeline{
                 echo 'Tag and push Docker image'
                 sh("gcloud auth configure-docker")
                 sh("docker push ${full_image_name}")
-                sh("gcloud container images add-tag $full_image_name} ${docker_repo}/${product_name}-${component_name}:${env.BRANCH_NAME}-latest")
+                sh("gcloud container images add-tag ${full_image_name} ${docker_repo}/${product_name}-${component_name}:${env.BRANCH_NAME}-latest")
             }
         }
         stage('Deploy Docker image'){
