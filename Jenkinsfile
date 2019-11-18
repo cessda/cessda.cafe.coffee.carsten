@@ -23,7 +23,8 @@ pipeline{
         project_name = "${GCP_PROJECT}"
         product_name = "cafe"
         component_name = "coffee-carsten"
-        image_tag = "${docker_repo}/${product_name}-${component_name}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+        image_tag = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+        full_image_name = "${docker_repo}/${product_name}-${component_name}:${image_tag}"
         scannerHome = tool 'sonar-scanner'
     }
 
@@ -64,21 +65,21 @@ pipeline{
         }
         stage("Build Docker Image"){
             steps{
-                echo "Building Docker image using Dockerfile with tag ${image_tag}"
-                sh("docker build -t ${image_tag} .")
+                echo "Building Docker image using Dockerfile with tag ${full_image_name}"
+                sh("docker build -t ${full_image_name} .")
             }
         }
         stage('Push Docker image'){
             steps{
                 echo 'Tag and push Docker image'
                 sh("gcloud auth configure-docker")
-                sh("docker push ${image_tag}")
-                sh("gcloud container images add-tag ${image_tag} ${docker_repo}/${product_name}-${component_name}:${env.BRANCH_NAME}-latest")
+                sh("docker push ${full_image_name}")
+                sh("gcloud container images add-tag $full_image_name} ${docker_repo}/${product_name}-${component_name}:${env.BRANCH_NAME}-latest")
             }
         }
         stage('Deploy Docker image'){
             steps{
-                build job: '../cessda.cafe.deployment/master', parameters: [string(name: "${component_name}_image_tag", value: "${image_tag}"), string(name: 'component', value: "${component_name}")], wait: false
+                build job: '../cessda.cafe.deployment/master', parameters: [string(name: 'image_tag', value: "${image_tag}"), string(name: 'component', value: "${component_name}")], wait: false
             }
         }
     }
