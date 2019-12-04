@@ -137,7 +137,7 @@ func newJob(sentJobID string, Product string) (*job, bool) {
 	newJob.ID = myJobID
 	newJob.Product = Product
 	newJob.JobStarted = time.Now().Format(time.RFC3339)
-	newJob.JobReady = time.Now().Add(time.Minute * 1).Format(time.RFC3339)
+	newJob.JobReady = time.Now().Add(time.Second * 17).Format(time.RFC3339)
 
 	jobList = append(jobList, newJob)
 

@@ -84,7 +84,11 @@ func setupRouter() *gin.Engine {
 		log.SetFormatter(formatters.NewGelf(hostname))
 	}
 
-	log.Level = logrus.DebugLevel
+	if gin.Mode() == "debug" {
+		log.Level = logrus.DebugLevel
+	} else {
+		log.Level = logrus.InfoLevel
+	}
 
 	r.Use(myRequestLogger(log), gin.Recovery())
 
@@ -145,14 +149,14 @@ func setupRouter() *gin.Engine {
 		if !success {
 			log.WithFields(logrus.Fields{
 				"requestId": c.MustGet("RequestId"),
-			}).Debug("Error starting job")
+			}).Error("Error starting job")
 			c.JSON(http.StatusBadRequest, gin.H{"message": "Machine busy!"})
 		} else {
 			log.WithFields(logrus.Fields{
 				"requestId": c.MustGet("RequestId"),
 				"product":   result.Product,
 				"jobReady":  result.JobReady,
-			}).Debug("Job started")
+			}).Info("Job started")
 			c.JSON(http.StatusOK, result)
 		}
 
@@ -164,13 +168,13 @@ func setupRouter() *gin.Engine {
 		log.WithFields(logrus.Fields{
 			"requestId": c.MustGet("RequestId"),
 			"success":   success,
-		}).Debug("Request to retrieve Coffee")
+		}).Info("Request to retrieve Coffee")
 		if !success {
 			log.WithFields(logrus.Fields{
 				"requestId": c.MustGet("RequestId"),
 				"success":   success,
 				"job-id":    ID,
-			}).Debug("Failed to retrieve Coffee")
+			}).Error("Failed to retrieve Coffee")
 			c.JSON(http.StatusBadRequest, gin.H{"message": message})
 		} else {
 			c.JSON(http.StatusOK, job)
@@ -185,7 +189,7 @@ func setupRouter() *gin.Engine {
 		resetButton()
 		log.WithFields(logrus.Fields{
 			"requestId": c.MustGet("RequestId"),
-		}).Debug("Machine reset!")
+		}).Error("Machine reset!")
 		c.JSON(http.StatusOK, gin.H{"message": "Machine reset!"})
 	})
 
