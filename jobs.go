@@ -70,11 +70,11 @@ func systemStatus() (int, int, string) {
 
 	if systemBrewing() {
 		systemStatusCode = 1
-		systemHTTPStatusCode = http.StatusConflict
+		systemHTTPStatusCode = http.StatusServiceUnavailable
 		systemStatusMessage = "System Brewing -- Please wait!"
 	} else if jobWaiting() {
 		systemStatusCode = 2
-		systemHTTPStatusCode = http.StatusUnauthorized
+		systemHTTPStatusCode = http.StatusServiceUnavailable
 		systemStatusMessage = "Coffee Waiting -- Come and get it!"
 	} else {
 		systemStatusCode = 0
@@ -87,7 +87,7 @@ func systemStatus() (int, int, string) {
 }
 
 // set a sepcific job to retrieved if it`s done but still waiting
-func retrieveJob(id string) (*job, bool, string) {
+func retrieveJob(id string) (*job, bool, int, string) {
 	for index, o := range jobList {
 		if o.ID == id {
 			// only retrieve when done and only once
@@ -96,14 +96,14 @@ func retrieveJob(id string) (*job, bool, string) {
 				if len(o.JobRetrieved) == 0 {
 					o.JobRetrieved = time.Now().Format(time.RFC3339)
 					jobList[index].JobRetrieved = o.JobRetrieved
-					return &o, true, ""
+					return &o, true, http.StatusOK, ""
 				}
-				return &o, false, "Job already retrieved"
+				return &o, false, http.StatusNotFound, "Job already retrieved"
 			}
-			return &o, false, "Job not ready"
+			return &o, false, http.StatusServiceUnavailable, "Job not ready"
 		}
 	}
-	return nil, false, "Job unknown"
+	return nil, false, http.StatusGone, "Job unknown"
 }
 
 // return a job
@@ -117,13 +117,13 @@ func getJobbyID(id string) (*job, bool) {
 }
 
 // create a new coffee job
-func newJob(sentJobID string, Product string) (*job, bool) {
+func newJob(sentJobID string, Product string) (*job, bool, int, string) {
 	var myJobID string
 
-	systemStatusCode, _, _ := systemStatus()
+	systemStatusCode, systemHTTPStatusCode, systemStatusMessage := systemStatus()
 
 	if !(systemStatusCode == 0) {
-		return nil, false
+		return nil, false, systemHTTPStatusCode, systemStatusMessage
 	}
 
 	if len(sentJobID) == 0 {
@@ -142,6 +142,6 @@ func newJob(sentJobID string, Product string) (*job, bool) {
 	jobList = append(jobList, newJob)
 
 	theNewJob, success := getJobbyID(newJob.ID)
-	return theNewJob, success
+	return theNewJob, success, systemHTTPStatusCode, ""
 
 }

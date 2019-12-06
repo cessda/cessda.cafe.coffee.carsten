@@ -144,13 +144,14 @@ func setupRouter() *gin.Engine {
 		var incomingJob coffeeJob
 		c.BindJSON(&incomingJob)
 
-		result, success := newJob(incomingJob.ID, incomingJob.Product)
+		result, success, systemHTTPStatusCode, systemStatusMessage := newJob(incomingJob.ID, incomingJob.Product)
 
 		if !success {
 			log.WithFields(logrus.Fields{
 				"requestId": c.MustGet("RequestId"),
-			}).Error("Error starting job")
-			c.JSON(http.StatusBadRequest, gin.H{"message": "Machine busy!"})
+				"errorCode": systemHTTPStatusCode,
+			}).Error("Error starting job: " + systemStatusMessage)
+			c.JSON(systemHTTPStatusCode, gin.H{"message": systemStatusMessage})
 		} else {
 			log.WithFields(logrus.Fields{
 				"requestId": c.MustGet("RequestId"),
@@ -164,7 +165,7 @@ func setupRouter() *gin.Engine {
 
 	r.GET("/retrieve-job/:ID", func(c *gin.Context) {
 		ID := c.Param("ID")
-		job, success, message := retrieveJob(ID)
+		job, success, systemHTTPStatusCode, message := retrieveJob(ID)
 		log.WithFields(logrus.Fields{
 			"requestId": c.MustGet("RequestId"),
 			"success":   success,
@@ -172,9 +173,9 @@ func setupRouter() *gin.Engine {
 		if !success {
 			log.WithFields(logrus.Fields{
 				"requestId": c.MustGet("RequestId"),
-				"success":   success,
+				"errorCode": systemHTTPStatusCode,
 				"job-id":    ID,
-			}).Error("Failed to retrieve Coffee")
+			}).Error("Failed to retrieve Coffee: " + message)
 			c.JSON(http.StatusBadRequest, gin.H{"message": message})
 		} else {
 			c.JSON(http.StatusOK, job)
