@@ -19,6 +19,8 @@ lint:
 test: prep lint
 	# presentable output
 	go test -v
+
+test-ci: prep lint
 	# test report in junit-format
 	go test -v 2>&1 | go-junit-report > junit.xml
 	# coverage report for use by sonar

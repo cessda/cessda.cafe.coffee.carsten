@@ -41,7 +41,7 @@ pipeline{
             steps{
                 echo "Running test suite"
                 sh("ln -s $WORKSPACE /go/src/carsten-coffee-api")
-                sh("cd /go/src/carsten-coffee-api && make test")
+                sh("cd /go/src/carsten-coffee-api && make test-ci")
             }
             post {
                 always {
