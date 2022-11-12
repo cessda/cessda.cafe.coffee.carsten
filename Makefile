@@ -23,7 +23,7 @@ test-ci: prep lint
 	go test -coverprofile=coverage.out -v -json 2>&1 > report.json
 
 build: prep
-	go build -v .
+	go build -v -o coffee-api .
 
 run:
 	go run .

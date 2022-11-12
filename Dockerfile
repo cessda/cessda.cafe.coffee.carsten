@@ -14,15 +14,13 @@
 
 # build the binary
 FROM golang:latest as builder
-WORKDIR /go/src/carsten-coffee-api
-COPY vendor/vendor.json /go/src/carsten-coffee-api/vendor/
-RUN go get -u github.com/kardianos/govendor
-RUN govendor sync
-COPY *.go /go/src/carsten-coffee-api/
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v .
+WORKDIR /go/src/coffee-api
+COPY *.go /go/src/coffee-api/
+RUN make prep
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 make build
 
 # package the binary into a container
 FROM scratch
-COPY --from=builder /go/src/carsten-coffee-api/carsten-coffee-api /carsten-coffee-api
-CMD ["/carsten-coffee-api"]
+COPY --from=builder /go/src/coffee-api/coffee-api /coffee-api
+CMD ["/coffee-api"]
 

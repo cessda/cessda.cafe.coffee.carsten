@@ -40,8 +40,8 @@ pipeline{
             }
             steps{
                 echo "Running test suite"
-                sh("ln -s $WORKSPACE /go/src/carsten-coffee-api")
-                sh("cd /go/src/carsten-coffee-api && make test-ci")
+                sh("ln -s $WORKSPACE /go/src/coffee-api")
+                sh("cd /go/src/coffee-api && make test-ci")
             }
             post {
                 always {
@@ -79,7 +79,7 @@ pipeline{
         }
         stage('Deploy Docker image'){
             steps{
-                build job: '../cessda.cafe.deployment/master', parameters: [string(name: 'image_tag', value: "${image_tag}"), string(name: 'component', value: "${component_name}")], wait: false
+                build job: '../cessda.cafe.deployment/main', parameters: [string(name: 'image_tag', value: "${image_tag}"), string(name: 'component', value: "${component_name}")], wait: false
             }
         }
     }
