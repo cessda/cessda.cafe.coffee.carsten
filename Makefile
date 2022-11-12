@@ -1,20 +1,15 @@
-# COPYRIGHT CESSDA ERIC 2019
+# COPYRIGHT CESSDA ERIC 2022
 # SPDX-Identifier: Apache-2.0
 #
 
 
 prep:
-	go get -u golang.org/x/lint/golint
-	go get -u github.com/jstemmer/go-junit-report
-	go get -u github.com/kardianos/govendor
-	govendor sync
-
+	go mod tidy
 
 lint:
 	# linting and standard code vetting
 	golint -set_exit_status $(go list ./... | grep -v /vendor/) | tee golint-report.out
 	go vet $(go list ./... | grep -v /vendor/) 2> govet-report.out
-
 
 test: prep lint
 	# presentable output

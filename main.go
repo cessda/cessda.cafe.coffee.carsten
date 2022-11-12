@@ -1,11 +1,11 @@
 // Carsten's CESSDA CAFE Coffee Machine
-// Copyright CESSDA-ERIC 2019
+// Copyright CESSDA-ERIC 2022
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not
 // use this file except in compliance with the License.
 // You may obtain a copy of the License at
 // http://www.apache.org/licenses/LICENSE-2.0
-
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,14 +16,15 @@
 package main
 
 import (
-	"github.com/atarantini/ginrequestid"
-	"github.com/fabienm/go-logrus-formatters"
-	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/atarantini/ginrequestid"
+	formatters "github.com/fabienm/go-logrus-formatters"
+	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type coffeeJob struct {

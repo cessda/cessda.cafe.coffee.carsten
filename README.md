@@ -4,11 +4,14 @@ Golang implementation of CESSDA Café Coffee machine using [Gin Gonic](https://g
 
 ## Installation
 
-Assuming you have go, and the code in your go path,
-install the dependencies with [Govendor](https://github.com/kardianos/govendor).
+Assuming you have go and golint, install the dependencies.
 
 ```bash
-govendor sync
+go mod tidy
+```
+or
+```bash
+make prep
 ```
 
 ## Options
@@ -18,7 +21,7 @@ To specify a port other then the default, set the environment variable
 export COFFEE_PORT="1337"
 ```
 
-To log log in Gelf format, use the follwing environment setting
+To log log in Gelf format, use the following environment setting
 ```bash
 export GELF_LOGGING="true"
 ```
