@@ -41,7 +41,7 @@ pipeline{
             steps{
                 echo "Running test suite"
                 sh("ln -s $WORKSPACE /go/src/coffee-api")
-                sh("go get golang.org/x/lint/golint")
+                sh("cd /go/src/coffee-api && go get golang.org/x/lint/golint && go install golang.org/x/lint/golint")
                 sh("cd /go/src/coffee-api && make test-ci")
             }
             post {
