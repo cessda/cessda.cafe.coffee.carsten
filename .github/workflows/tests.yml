@@ -20,6 +20,9 @@ jobs:
         check-latest: true
         cache: true
 
+    - name: Install golint
+      run: sudo apt-get install -y golint
+
     - name: Install dependencies
       run: make prep
 
