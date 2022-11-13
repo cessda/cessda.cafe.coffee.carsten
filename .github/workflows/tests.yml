@@ -1,4 +1,4 @@
-name: Makefile CI
+name: CI Testsuite
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
 
@@ -35,6 +35,3 @@ jobs:
       with:
         name: JUnit
         path: junit.xml
-
-    - name: Build
-      run: make build

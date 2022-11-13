@@ -16,6 +16,8 @@
 FROM golang:latest as builder
 WORKDIR /go/src/coffee-api
 COPY *.go /go/src/coffee-api/
+COPY go.* /go/src/coffee-api/
+COPY Makefile /go/src/coffee-api/
 RUN make prep
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 make build
 
