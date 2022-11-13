@@ -8,6 +8,7 @@ on:
 
 jobs:
   test:
+    name: Execute Test Suite
 
     runs-on: ubuntu-latest
 
