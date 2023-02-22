@@ -95,7 +95,7 @@ func retrieveJob(id string) (*job, bool, int, string) {
 			readytime, _ := time.Parse(time.RFC3339, o.JobReady)
 			if time.Now().After(readytime) {
 				if len(o.JobRetrieved) == 0 {
-					o.JobRetrieved = time.Now().Format(time.RFC3339)
+					o.JobRetrieved = time.Now().UTC().Format(time.RFC3339)
 					jobList[index].JobRetrieved = o.JobRetrieved
 					return &o, true, http.StatusOK, ""
 				}
@@ -137,8 +137,8 @@ func newJob(sentJobID string, Product string) (*job, bool, int, string) {
 	var newJob job
 	newJob.ID = myJobID
 	newJob.Product = Product
-	newJob.JobStarted = time.Now().Format(time.RFC3339)
-	newJob.JobReady = time.Now().Add(time.Second * 17).Format(time.RFC3339)
+	newJob.JobStarted = time.Now().UTC().Format(time.RFC3339)
+	newJob.JobReady = time.Now().UTC().Add(time.Second * 17).Format(time.RFC3339)
 
 	jobList = append(jobList, newJob)
 
