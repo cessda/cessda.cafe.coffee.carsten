@@ -16,8 +16,8 @@ pipeline{
     environment {
         product_name = "cafe"
         component_name = "coffee-carsten"
-        image_tag = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
-        full_image_name = "${DOCKER_ARTIFACT_REGISTRY}/${product_name}-${module_name}:${image_tag}"
+        image_tag = "${env.BUILD_NUMBER}"
+        full_image_name = "${DOCKER_ARTIFACT_REGISTRY}/${product_name}-${component_name}:${image_tag}"
         scannerHome = tool 'sonar-scanner'
     }
 
@@ -68,7 +68,7 @@ pipeline{
                 echo 'Tag and push Docker image'
                 sh "gcloud auth configure-docker ${ARTIFACT_REGISTRY_HOST}"
                 sh "docker push ${full_image_name}"
-                sh "gcloud container images add-tag ${full_image_name} {DOCKER_ARTIFACT_REGISTRY}/${product_name}-${module_name}:latest"
+                sh "gcloud container images add-tag ${full_image_name} {DOCKER_ARTIFACT_REGISTRY}/${product_name}-${component_name}:latest"
             }
             when { branch 'main' }
         }
