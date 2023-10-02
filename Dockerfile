@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # build the binary
-FROM golang:latest as builder
+FROM golang:1.21 as builder
 WORKDIR /go/src/coffee-api
 COPY *.go /go/src/coffee-api/
 COPY go.* /go/src/coffee-api/

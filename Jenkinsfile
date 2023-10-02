@@ -26,19 +26,14 @@ pipeline{
     stages{
         stage('Run Test Suite') {
             agent{
-                docker {
-                    image 'golang:latest'
+                dockerfile {
+                    filename 'Dockerfile'
                     reuseNode true
                 }
             }
             steps{
-                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                    sh 'ln -s $WORKSPACE /go/src/coffee-api'
-                    dir('/go/src/coffee-api') {
-                        sh 'go get golang.org/x/lint/golint; go install golang.org/x/lint/golint'
-                        sh 'make test-ci'
-                    }
-                }
+                sh 'go get golang.org/x/lint/golint; go install golang.org/x/lint/golint'
+                sh 'make test-ci'
             }
             post {
                 always {
