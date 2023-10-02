@@ -68,7 +68,7 @@ pipeline{
                 echo 'Tag and push Docker image'
                 sh "gcloud auth configure-docker ${ARTIFACT_REGISTRY_HOST}"
                 sh "docker push ${full_image_name}"
-                sh "gcloud container images add-tag ${full_image_name} {DOCKER_ARTIFACT_REGISTRY}/${product_name}-${component_name}:latest"
+                sh "gcloud artifacts docker tags add ${full_image_name} {DOCKER_ARTIFACT_REGISTRY}/${product_name}-${component_name}:latest"
             }
             when { branch 'main' }
         }
