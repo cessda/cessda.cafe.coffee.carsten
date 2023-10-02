@@ -13,25 +13,18 @@
 // limitations under the License.
 
 pipeline{
-    options {
-        ansiColor('xterm')
-        buildDiscarder logRotator(artifactNumToKeepStr: '5', numToKeepStr: '10')
-    }
-
-    environment
-    {
-        project_name = "${GCP_PROJECT}"
+    environment {
         product_name = "cafe"
         component_name = "coffee-carsten"
         image_tag = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
-        full_image_name = "${docker_repo}/${product_name}-${component_name}:${image_tag}"
+        full_image_name = "${DOCKER_ARTIFACT_REGISTRY}/${product_name}-${module_name}:${image_tag}"
         scannerHome = tool 'sonar-scanner'
     }
 
     agent any
 
     stages{
-        stage('Run Test Suite'){
+        stage('Run Test Suite') {
             agent{
                 docker {
                     image 'golang:latest'
@@ -39,15 +32,24 @@ pipeline{
                 }
             }
             steps{
-                echo "Running test suite"
-                sh("ln -s $WORKSPACE /go/src/coffee-api")
-                sh("cd /go/src/coffee-api && go get golang.org/x/lint/golint && go install golang.org/x/lint/golint")
-                sh("cd /go/src/coffee-api && make test-ci")
+                options {
+                    warnError('Lint failures')
+                }
+                sh 'ln -s $WORKSPACE /go/src/coffee-api'
+                dir('/go/src/coffee-api') {
+                    sh 'go get golang.org/x/lint/golint; go install golang.org/x/lint/golint'
+                    sh 'make test-ci'
+                }
             }
             post {
                 always {
                     junit 'junit.xml'
                 }
+            }
+        }
+        stage("Build Docker Image") {
+            steps{
+                sh "docker build -t ${full_image_name} ."
             }
         }
         stage('Run Sonar Scan') {
@@ -56,6 +58,7 @@ pipeline{
                     sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
+            when { branch 'main' }
         }
         stage("Get Sonar Quality Gate") {
             steps {
@@ -63,25 +66,22 @@ pipeline{
                     waitForQualityGate abortPipeline: false
                 }
             }
+            when { branch 'main' }
         }
-        stage("Build Docker Image"){
-            steps{
-                echo "Building Docker image using Dockerfile with tag ${full_image_name}"
-                sh("docker build -t ${full_image_name} .")
-            }
-        }
-        stage('Push Docker image'){
+        stage('Push Docker image') {
             steps{
                 echo 'Tag and push Docker image'
-                sh("gcloud auth configure-docker")
-                sh("docker push ${full_image_name}")
-                sh("gcloud container images add-tag ${full_image_name} ${docker_repo}/${product_name}-${component_name}:${env.BRANCH_NAME}-latest")
+                sh "gcloud auth configure-docker ${ARTIFACT_REGISTRY_HOST}"
+                sh "docker push ${full_image_name}"
+                sh "gcloud container images add-tag ${full_image_name} {DOCKER_ARTIFACT_REGISTRY}/${product_name}-${module_name}:latest"
             }
+            when { branch 'main' }
         }
-        stage('Deploy Docker image'){
+        stage('Deploy Docker image') {
             steps{
                 build job: '../cessda.cafe.deployment/main', parameters: [string(name: 'image_tag', value: "${image_tag}"), string(name: 'component', value: "${component_name}")], wait: false
             }
+            when { branch 'main' }
         }
     }
 }
