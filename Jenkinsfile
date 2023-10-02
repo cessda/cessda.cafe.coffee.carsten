@@ -27,7 +27,7 @@ pipeline{
         stage('Run Test Suite') {
             agent{
                 dockerfile {
-                    additionalBuildArgs '--target builder'
+                    additionalBuildArgs '--target base'
                     filename 'Dockerfile'
                     reuseNode true
                 }
