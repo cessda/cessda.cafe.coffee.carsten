@@ -32,13 +32,12 @@ pipeline{
                 }
             }
             steps{
-                options {
-                    warnError('Lint failures')
-                }
-                sh 'ln -s $WORKSPACE /go/src/coffee-api'
-                dir('/go/src/coffee-api') {
-                    sh 'go get golang.org/x/lint/golint; go install golang.org/x/lint/golint'
-                    sh 'make test-ci'
+                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                    sh 'ln -s $WORKSPACE /go/src/coffee-api'
+                    dir('/go/src/coffee-api') {
+                        sh 'go get golang.org/x/lint/golint; go install golang.org/x/lint/golint'
+                        sh 'make test-ci'
+                    }
                 }
             }
             post {
