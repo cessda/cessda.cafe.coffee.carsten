@@ -12,7 +12,7 @@ require (
 	github.com/fabienm/go-logrus-formatters v1.0.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/gofrs/uuid v4.4.0+incompatible
-	github.com/sirupsen/logrus v1.9.0
+	github.com/sirupsen/logrus v1.9.1
 	github.com/stretchr/testify v1.8.3
 )
 
